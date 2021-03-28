@@ -7,6 +7,7 @@ public class Election {
     private final String electionID;
     ArrayList<Candidate> candidates = new ArrayList<>();
     ArrayList<Voter> voters = new ArrayList<>();
+
     public Election(String electionName, String electionID) {
         this.electionName = electionName;
         this.electionID = electionID;
