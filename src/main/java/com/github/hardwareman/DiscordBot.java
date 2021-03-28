@@ -27,7 +27,8 @@ public class DiscordBot {
             if (event.isServerMessage()) {
                 StringTokenizer st = new StringTokenizer(event.getMessageContent());
                 if (st.hasMoreTokens()) {
-                    if (st.nextToken().equalsIgnoreCase("!votehelp")) {
+                    String tok = st.nextToken();
+                    if (tok.equalsIgnoreCase("!votehelp")) {
                         EmbedBuilder embed = new EmbedBuilder()
                                 .setTitle("Command List")
                                 .setDescription("`!startvote [title] [candidate1],[candidate2],...` - Start a vote\n" +
@@ -38,10 +39,10 @@ public class DiscordBot {
                                 .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg");
                         event.getChannel().sendMessage(embed);
                     }
-                    else if (st.nextToken().equalsIgnoreCase("!startvote")) {
+                    else if (tok.equalsIgnoreCase("!startvote")) {
                         EmbedBuilder embed = new EmbedBuilder();
                         if (st.hasMoreTokens()) {
-                            String tok = st.nextToken("");
+                            tok = st.nextToken("");
                             String eID = new Random().ints(48, 123)
                                     .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                                     .limit(6)
@@ -85,7 +86,7 @@ public class DiscordBot {
                                             "Command format: `!startvote [title] [candidate1],[candidate2],...`"));
                         }
                     }
-                    else if (st.nextToken().equals("!getcandidates")) {
+                    else if (tok.equals("!getcandidates")) {
                         StringBuilder sb = new StringBuilder();
                         if (st.hasMoreTokens()) {
                             String eleID = st.nextToken();
