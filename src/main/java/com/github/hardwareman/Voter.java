@@ -14,6 +14,11 @@ public class Voter {
         return name;
     }
 
+    public ArrayList<String> getRankings() {
+        return rankings;
+    }
+
+
     public void addChoice(String choice) {
         rankings.add(choice);
     }
