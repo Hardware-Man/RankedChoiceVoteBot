@@ -83,7 +83,7 @@ public class DiscordBot {
                                 embed.addField("Candidates", candidates.toString())
                                         .addField("Election ID", eID)
                                         .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg")
-                                        .setFooter("DM me with the `!joinvote` command to join this election!");
+                                        .setFooter("DM me with the `!joinvote [electionid]` command to join this election!");
                                 event.getChannel().sendMessage(embed);
                             } else {
                                 event.getChannel().sendMessage(embed.setTitle("Invalid Start of Vote")
@@ -316,7 +316,7 @@ public class DiscordBot {
                                     event.getChannel().sendMessage(new EmbedBuilder()
                                             .setTitle("Joined Election Successfully")
                                             .setDescription("You have joined the election: " + selectedEle.getElectionName() + "!\n" +
-                                                    "Cast your votes using the `!setvotes` command.\n" +
+                                                    "Cast your votes using the `!setvotes [electionid] [rank1candidate, rank2, et...]` command.\n" +
                                                     "Here are the candidates of this election:\n" +
                                                     cans.toString()));
                                 } else {
