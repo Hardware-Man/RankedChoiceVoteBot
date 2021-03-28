@@ -42,7 +42,7 @@ public class DiscordBot {
                     else if (tok.equalsIgnoreCase("!startvote")) {
                         EmbedBuilder embed = new EmbedBuilder();
                         if (st.hasMoreTokens()) {
-                            tok = st.nextToken("");
+                            tok = st.nextToken(" ");
                             String eID = new Random().ints(48, 123)
                                     .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                                     .limit(6)
