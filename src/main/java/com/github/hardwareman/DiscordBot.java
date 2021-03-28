@@ -316,7 +316,7 @@ public class DiscordBot {
                                     event.getChannel().sendMessage(new EmbedBuilder()
                                             .setTitle("Joined Election Successfully")
                                             .setDescription("You have joined the election: " + selectedEle.getElectionName() + "!\n" +
-                                                    "Cast your votes using the `!setvotes [electionid] [rank1candidate, rank2, et...]` command. To remind yourself of the electionID, look at what you just dmed me to join\n" +
+                                                    "Cast your votes using the `!setvotes [electionid] [rank1candidate, rank2, et...]` command. To remind yourself of the electionID, look at what you just dmed me to join. Note: you don't need to rank every candidate\n" +
                                                     "Here are the candidates of this election:\n" +
                                                     cans.toString()));
                                 } else {
