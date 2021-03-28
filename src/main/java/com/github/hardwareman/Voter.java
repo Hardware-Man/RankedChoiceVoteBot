@@ -1,7 +1,13 @@
 package com.github.hardwareman;
 
 public class Voter {
-    public Voter() {
+    private final String name;
 
+    public Voter(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
