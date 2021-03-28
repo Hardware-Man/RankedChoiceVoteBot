@@ -108,9 +108,171 @@ public class DiscordBot {
 
                             if (eleIndex != -1) {
                                 Election selectedEle = elections.get(eleIndex);
-                                ArrayList<Candidate> Candidate = selectedEle.candidates;
+                                ArrayList<Candidate> Candidates = selectedEle.candidates;
                                 ArrayList<Voter> Voters = selectedEle.voters;
                                 //Work here Zach
+                                //Option to print all output
+                                //Option to show the results of rounds
+                                boolean printing = false;
+                                boolean showRounds = false;
+                                ArrayList<Candidate> lost = new ArrayList<>();
+                                int d = 0;
+                                while(Candidates.size()>1){
+                                    if(showRounds)   System.out.print("Round "+d+ ": ");
+                                    //Calculate:
+
+                                    //Initialize all ranks to zero
+                                    for(int i = 0; i<Candidates.size(); i++){
+                                        Candidates.get(i).setRank(0);
+                                    }
+                                    if(printing)System.out.println("Initialized vals to 0");
+                                    //For each Voter
+                                    for(int j = 0; j<Voters.size(); j++){
+                                        Voter current = Voters.get(j);
+                                        //check if their getRanking() is empty, and if so delete them
+                                        if(current.getRankings().isEmpty()){
+                                            if(printing)System.out.println("getRanking() are empty, so removing Voter"+j +" and redoing j="+j);
+                                            Voters.remove(j);
+                                            j--;
+                                            continue;
+                                        }
+                                        //if their top choice lost, remove it and move stuff up.
+                                        if(printing)System.out.println("Voter"+j+ " is not empty!!!!");
+                                        boolean isInLost = false;
+                                        for(int k = 0; k<lost.size(); k++){
+                                            if(lost.get(k).getName().equals(current.getRankings().get(0))){
+                                                isInLost = true;
+                                            }
+                                        }
+                                        if(isInLost){
+                                            if(printing)System.out.println("They appear in Lost!");
+                                            current.getRankings().remove(0);
+                                            //if they now have no getRanking(), skip theem
+                                            if(current.getRankings().isEmpty()){
+                                                if(printing)System.out.println("After getting rid of their lost person, they have no more getRanking() so removing the Voter");
+                                                Voters.remove(j);
+                                                j--;
+                                                continue;
+                                            }
+                                        }
+                                        //Their top choice is still in, add 1 to their rank
+                                        if(printing)System.out.println("Top choice "+current.getRankings().get(0)+" is still in, so adding 1 to:");
+                                        int IndexOfCandidates = 0;
+                                        for(int k = 0; k<Candidates.size(); k++){
+                                            if(current.getRankings().get(0).equals(Candidates.get(k).getName())){
+                                                IndexOfCandidates = k;
+                                                break;
+                                            }
+                                        }
+                                        if(printing)System.out.println(Candidates.get(IndexOfCandidates).getName());
+                                        Candidates.get(IndexOfCandidates).setRank(Candidates.get(IndexOfCandidates).getRank()+1);
+                                    }
+
+                                    //Run the Poll
+                                    if(printing)System.out.println("RUNNING POLL!");
+                                    if(showRounds)  System.out.println("Standings at the start:");
+                                    for(int i = 0; i<Voters.size(); i++){
+                                        if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
+                                    }
+                                    for(int i = 0; i<Candidates.size(); i++){
+                                        if(showRounds)    System.out.println("Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                    }
+                                    //Initialize lowest to Candidates 0
+                                    Candidate lowest = Candidates.get(0);
+                                    Candidate highest = Candidates.get(0);
+                                    //Calculate votesToWin as 0.5 * the amount of Voters left.
+                                    double votesToWin = 0.5*Voters.size();
+                                    if(printing)System.out.println("RUNNING THE POLL, want to get above "+votesToWin+" votes to win.");
+                                    //Quickly check whether anyone won with more than 1/2 the votes.
+                                    for(int i = 0; i<Candidates.size(); i++){
+                                        if(Candidates.get(i).getRank()>votesToWin){
+                                            System.out.println("WINNER!!!!! "+Candidates.get(i).getName()+" with: "+Candidates.get(i).getRank()+" votes.");
+                                            return;
+                                        }
+                                    }
+                                    //Go through and see who's lowest
+                                    for(int i = 0; i<Candidates.size(); i++){
+                                        Candidate current = Candidates.get(i);
+                                        if(printing)System.out.println("HERE AND "+current.getName() +" Has votes #: "+current.getRank());
+
+                                        //If we have less votes than the lowest, we're the lowest.
+                                        if(current.getRank()>highest.getRank()){
+                                            highest = current;
+                                            if(printing)  System.out.println("Highest is: "+highest.getName());
+
+                                        }
+                                        if(current.getRank()<=lowest.getRank()){
+                                            lowest = current;
+                                            if(printing) System.out.println("Lowest is: "+lowest.getName());
+
+                                        }
+                                    }
+                                    //Check for ties for lowest
+                                    ArrayList<Integer> indicesOfTies = new ArrayList<Integer>();
+                                    for(int m =0; m<Candidates.size(); m++){
+                                        //if equal to lowest, add the index to the arrayList.
+                                        if(Candidates.get(m).getRank()==lowest.getRank()){
+                                            if(printing)System.out.println("Adding index: "+m+" to indicesOfTies");
+                                            indicesOfTies.add(m);
+                                        }
+                                    }
+                                    //No Tie for last, just remove last and add to removed list
+                                    if(indicesOfTies.size()==1){
+                                        if(showRounds)    System.out.print("Removed: "+lowest.getName());
+                                        lost.add(lowest);
+                                        Candidates.remove(lowest);
+                                    }
+                                    //Tie for last, add them up and see if together they are >= highest. If yes, end vote. If no, remove them.
+                                    else{
+                                        if(printing)System.out.println("Tied for last");
+                                        int valOfLowest = 0;
+                                        int valOfHighest= highest.getRank();
+                                        String names = "";
+                                        for(int s = 0; s<indicesOfTies.size(); s++){
+                                            names +=Candidates.get(indicesOfTies.get(s)).getName();
+                                            if(s!=indicesOfTies.size()-1) names+=" ";
+                                            valOfLowest+=Candidates.get(indicesOfTies.get(s)).getRank();
+                                            if(printing)System.out.println("valOfLowest ="+valOfLowest+" after adding: "+Candidates.get(indicesOfTies.get(s)).getName()+":"+Candidates.get(indicesOfTies.get(s)).getRank());
+                                        }
+                                        //tie
+                                        if(valOfLowest>=valOfHighest){
+                                            System.out.println("Tie between the following! Lowest people: "+names +", with valOfLowest "+valOfLowest+" alongside the highest: "+highest.getName()+" has: "+valOfHighest);
+                                            return;
+                                        }
+                                        //no tie
+                                        else{
+                                            if(printing)  System.out.println("Lowest "+valOfLowest+"< Highest "+valOfHighest);
+                                            //For each last place, add to lost and remove from Candidates. Descending order so doesn't affect others.
+                                            if(showRounds)    System.out.print("Removed: ");
+                                            for(int n = indicesOfTies.size()-1; n>=0; n--){
+                                                int removal = indicesOfTies.get(n);
+                                                if(showRounds)    System.out.print(Candidates.get(removal).getName()+" ");
+                                                lost.add(Candidates.get(removal));
+                                                Candidates.remove(removal);
+                                            }
+                                        }
+                                    }
+                                    d++;
+                                    if(showRounds)   System.out.println();
+                                    if(showRounds)    System.out.println("Standings at the end of Round: "+d+" ");
+                                    for(int i = 0; i<Voters.size(); i++){
+                                        if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
+                                    }
+                                    for(int i = 0; i<Candidates.size(); i++){
+                                        if(showRounds)    System.out.println("Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                    }
+                                    if(showRounds)   System.out.println();
+
+                                }
+                                if(Candidates.size()==1){
+                                    System.out.println("WE HAVE A WINNER AS A LAST SURVIVOR! " + Candidates.get(0).getName());
+                                }
+                                else if(Candidates.isEmpty()){
+                                    System.out.println("WE HAVE NO Candidates LEFT! NO ONE WINS!");
+                                }
+                                else{
+                                    System.out.println("WE SHOULDNT BE HERE");
+                                }
                             }
                         }
                     }

@@ -9,6 +9,12 @@ public class Candidate {
         this.name = name;
     }
 
+    public int getRank(){
+        return this.rank;
+    }
+    public void setRank(int newRank){
+        this.rank = newRank;
+    }
     public String getName() {
         return name;
     }
