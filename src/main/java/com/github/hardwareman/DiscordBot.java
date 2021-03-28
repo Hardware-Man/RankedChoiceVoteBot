@@ -64,7 +64,7 @@ public class DiscordBot {
                             if (st.hasMoreTokens()) {
                                 tok = st.nextToken(",");
                                 tok = tok.replaceAll("\\s+", " ");
-
+                                elections.get(currElection).addCandidate(new Candidate(tok));
                                 candidates.append(tok);
                                 while (st.hasMoreTokens()) {
                                     tok = st.nextToken("\t\n\r\f,");
