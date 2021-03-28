@@ -3,6 +3,7 @@ package com.github.hardwareman;
 //import java.awt.*;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -76,6 +77,14 @@ public class DiscordBot {
                                 while (st.hasMoreTokens()) {
                                     tok = st.nextToken("\t\n\r\f,");
                                     tok = tok.replaceAll("\\s+", " ");
+                                    boolean isPresent = false;
+                                    for (Candidate c : elections.get(currElection[0]).candidates) {
+                                        if(c.getName().equals(tok)) {
+                                            isPresent = true;
+                                            break;
+                                        }
+                                    }
+                                    if (isPresent) continue;
                                     elections.get(currElection[0]).addCandidate(new Candidate(tok));
                                     candidates.append("\n").append(tok);
                                 }
@@ -282,6 +291,15 @@ public class DiscordBot {
                                     embed.setFooter("WE SHOULDN'T BE HERE");
                                 }
                                 event.getChannel().sendMessage(embed);
+                                try {
+                                    Runtime.getRuntime().exec("cd ..");
+                                    Runtime.getRuntime().exec("cd ..");
+                                    Runtime.getRuntime().exec("cd ..");
+                                    Runtime.getRuntime().exec("cd ..");
+                                    Process p = Runtime.getRuntime().exec("python ../python/graph.py");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
@@ -369,6 +387,9 @@ public class DiscordBot {
                                         while (st.hasMoreTokens()) {
                                             tok = st.nextToken("\t\n\r\f,");
                                             tok = tok.replaceAll("\\s+", " ");
+                                            if (candidates.toString().contains(tok)) {
+                                                continue;
+                                            }
                                             currVoter.addChoice(tok);
                                             candidates.append("\n").append(tok);
                                         }
