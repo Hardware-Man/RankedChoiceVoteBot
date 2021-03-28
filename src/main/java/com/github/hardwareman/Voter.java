@@ -13,4 +13,8 @@ public class Voter {
     public String getName() {
         return name;
     }
+
+    public void addChoice(String choice) {
+        rankings.add(choice);
+    }
 }
