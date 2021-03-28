@@ -117,13 +117,19 @@ public class DiscordBot {
                                 Election selectedEle = elections.get(eleIndex);
                                 ArrayList<Candidate> candidates = selectedEle.candidates;
                                 ArrayList<Voter> voters = selectedEle.voters;
+                                //Work here Zach
                             }
                         }
+                    }
+                    else if(tok.equals("!endVote")){
+
+
+
+
                     }
                 }
             }
         });
-
         // Print the invite url of your bot
         System.out.println("You can invite the bot by using the following url: " + api.createBotInvite());
     }
