@@ -37,7 +37,7 @@ public class DiscordBot {
                                         "`!endvote [electionid] [showroundsbool]` - End a running vote\n" +
                                         "\n__**Private Message Commands:**__\n" +
                                         "`!joinvote [electionid]` - Join a currently running election\n" +
-                                        "`!setvote [electionid] [candidate1],[candidate2],...` - Declare your candidates in order of preference (make sure to use commas between different candidates so they appear on seperate lines) (not all candidates need to be voted for)" +
+                                        "`!setvote [electionid] [candidate1],[candidate2],...` - Declare your candidates in order of preference. (note: Use commas between different candidates so you see them on separate lines when vote starts)" +
                                         "\n__**Global Commands:**__\n" +
                                         "`!votestatus [electionid]` - Indicates whether election is currently running/exists\n" +
                                         "`!getcandidates [electionid]` - Show a currently running election's Candidates\n" +
