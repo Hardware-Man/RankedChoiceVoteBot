@@ -86,7 +86,7 @@ public class DiscordBot {
                                             "Command format: `!startvote [title] [candidate1],[candidate2],...`"));
                         }
                     }
-                    else if (tok.equals("!getcandidates")) {
+                    else if (tok.equalsIgnoreCase("!getcandidates")) {
                         StringBuilder sb = new StringBuilder();
                         if (st.hasMoreTokens()) {
                             String eleID = st.nextToken();
@@ -102,7 +102,7 @@ public class DiscordBot {
                                     .setDescription(sb.toString()));
                         }
                     }
-                    else if (tok.equals("!endvote")) {
+                    else if (tok.equalsIgnoreCase("!endvote")) {
                         if(st.hasMoreTokens()) {
                             String eleID = st.nextToken();
                             int eleIndex = -1;
@@ -120,12 +120,6 @@ public class DiscordBot {
                                 //Work here Zach
                             }
                         }
-                    }
-                    else if(tok.equals("!endVote")){
-
-
-
-
                     }
                 }
             }
