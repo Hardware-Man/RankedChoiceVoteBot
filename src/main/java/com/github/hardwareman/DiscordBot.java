@@ -34,13 +34,14 @@ public class DiscordBot {
                         embed.setTitle("Command List")
                                 .setDescription("__**Server Commands:**__\n" +
                                         "`!startvote [title] [candidate1],[candidate2],...` - Start a vote\n" +
-                                        "`!endvote [electionid]` - End a running vote\n" +
+                                        "`!endvote [electionid] [showroundsbool]` - End a running vote\n" +
                                         "\n__**Private Message Commands:**__\n" +
                                         "`!joinvote [electionid]` - Join a currently running election\n" +
-                                        "`!setvote [candidate1], [candidate2],...` - Declare your candidates in order of preference (not all candidates need to be voted for)" +
+                                        "`!setvote [electionid] [candidate1],[candidate2],...` - Declare your candidates in order of preference (make sure to use commas between different candidates so they appear on seperate lines) (not all candidates need to be voted for)" +
                                         "\n__**Global Commands:**__\n" +
                                         "`!votestatus [electionid]` - Indicates whether election is currently running/exists\n" +
-                                        "`!getcandidates [electionid]` - Show a currently running election's Candidates\n")
+                                        "`!getcandidates [electionid]` - Show a currently running election's Candidates\n" +
+                                        "`!getnumvoters [electionid]` - Show the number of voters in the election")
                                 .setColor(new Color(245, 132, 66))
                                 .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg");
                         event.getChannel().sendMessage(embed);
@@ -95,6 +96,8 @@ public class DiscordBot {
                         }
                     } else if (tok.equalsIgnoreCase("!getcandidates")) {
                         getCandidateList(elections, event, st);
+                    } else if (tok.equalsIgnoreCase("!getnumvoters")) {
+                        getNumVoters(elections, event, st, embed);
                     } else if (tok.equalsIgnoreCase("!endvote")) {
                         if (st.hasMoreTokens()) {
                             String eleID = st.nextToken();
@@ -115,10 +118,14 @@ public class DiscordBot {
                                 //Option to show the results of rounds
                                 boolean printing = false;
                                 boolean showRounds = false;
+                                if (st.hasMoreTokens()) {
+                                    tok = st.nextToken();
+                                    showRounds = Boolean.parseBoolean(tok);
+                                }
                                 ArrayList<Candidate> lost = new ArrayList<>();
                                 int d = 0;
                                 while(Candidates.size()>1){
-                                    if(showRounds)   System.out.print("Round "+d+ ": ");
+                                    if(showRounds)   embed.addField("","Round "+d+ ": ");
                                     //Calculate:
 
                                     //Initialize all ranks to zero
@@ -170,12 +177,12 @@ public class DiscordBot {
 
                                     //Run the Poll
                                     if(printing)System.out.println("RUNNING POLL!");
-                                    if(showRounds)  System.out.println("Standings at the start:");
+                                    if(showRounds)  embed.addField("","Standings at the start:");
                                     for(int i = 0; i<Voters.size(); i++){
                                         if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
                                     }
                                     for(int i = 0; i<Candidates.size(); i++){
-                                        if(showRounds)    System.out.println("Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                        if(showRounds)    embed.addField("","Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
                                     }
                                     //Initialize lowest to Candidates 0
                                     Candidate lowest = Candidates.get(0);
@@ -186,7 +193,8 @@ public class DiscordBot {
                                     //Quickly check whether anyone won with more than 1/2 the votes.
                                     for(int i = 0; i<Candidates.size(); i++){
                                         if(Candidates.get(i).getRank()>votesToWin){
-                                            System.out.println("WINNER!!!!! "+Candidates.get(i).getName()+" with: "+Candidates.get(i).getRank()+" votes.");
+                                            embed.setFooter("WINNER!!!!! "+Candidates.get(i).getName()+" with: "+Candidates.get(i).getRank()+" votes.");
+                                            event.getChannel().sendMessage(embed);
                                             return;
                                         }
                                     }
@@ -218,7 +226,7 @@ public class DiscordBot {
                                     }
                                     //No Tie for last, just remove last and add to removed list
                                     if(indicesOfTies.size()==1){
-                                        if(showRounds)    System.out.print("Removed: "+lowest.getName());
+                                        if(showRounds)    embed.addField("","Removed: "+lowest.getName());
                                         lost.add(lowest);
                                         Candidates.remove(lowest);
                                     }
@@ -236,43 +244,43 @@ public class DiscordBot {
                                         }
                                         //tie
                                         if(valOfLowest>=valOfHighest){
-                                            System.out.println("Tie between the following! Lowest people: "+names +", with valOfLowest "+valOfLowest+" alongside the highest: "+highest.getName()+" has: "+valOfHighest);
+                                            embed.setFooter("Tie between the following! Lowest people: "+names +", with valOfLowest "+valOfLowest+" alongside the highest: "+highest.getName()+" has: "+valOfHighest);
+                                            event.getChannel().sendMessage(embed);
                                             return;
                                         }
                                         //no tie
                                         else{
                                             if(printing)  System.out.println("Lowest "+valOfLowest+"< Highest "+valOfHighest);
                                             //For each last place, add to lost and remove from Candidates. Descending order so doesn't affect others.
-                                            if(showRounds)    System.out.print("Removed: ");
+                                            if(showRounds)    embed.addField("","Removed: ");
                                             for(int n = indicesOfTies.size()-1; n>=0; n--){
                                                 int removal = indicesOfTies.get(n);
-                                                if(showRounds)    System.out.print(Candidates.get(removal).getName()+" ");
+                                                if(showRounds)    embed.addField("",Candidates.get(removal).getName()+" ");
                                                 lost.add(Candidates.get(removal));
                                                 Candidates.remove(removal);
                                             }
                                         }
                                     }
                                     d++;
-                                    if(showRounds)   System.out.println();
-                                    if(showRounds)    System.out.println("Standings at the end of Round: "+d+" ");
+                                    if(showRounds)    embed.addField("","Standings at the end of Round: "+d+" ");
                                     for(int i = 0; i<Voters.size(); i++){
                                         if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
                                     }
                                     for(int i = 0; i<Candidates.size(); i++){
-                                        if(showRounds)    System.out.println("Candidate: "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                        if(showRounds)    embed.addField("","Candidate: "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
                                     }
-                                    if(showRounds)   System.out.println();
 
                                 }
                                 if(Candidates.size()==1){
-                                    System.out.println("WE HAVE A WINNER AS A LAST SURVIVOR! " + Candidates.get(0).getName());
+                                    embed.setFooter("WE HAVE A WINNER AS A LAST SURVIVOR! " + Candidates.get(0).getName());
                                 }
                                 else if(Candidates.isEmpty()){
-                                    System.out.println("WE HAVE NO Candidates LEFT! NO ONE WINS!");
+                                    embed.setFooter("WE HAVE NO Candidates LEFT! NO ONE WINS!");
                                 }
                                 else{
-                                    System.out.println("WE SHOULDNT BE HERE");
+                                    embed.setFooter("WE SHOULDN'T BE HERE");
                                 }
+                                event.getChannel().sendMessage(embed);
                             }
                         }
                     }
@@ -291,11 +299,30 @@ public class DiscordBot {
                                 }
                             }
                             if (selectedEle != null) {
-                                selectedEle.voters.add(new Voter(event.getMessageAuthor().getDiscriminatedName()));
-                                event.getChannel().sendMessage(new EmbedBuilder()
-                                        .setTitle("Joined Election Successfully")
-                                        .setDescription("You have joined the election: " + selectedEle.getElectionName() + "!\n" +
-                                                "Cast your votes using the `!setvotes` command."));
+                                boolean isPresent = false;
+                                for (Voter v : selectedEle.voters) {
+                                    if (v.getName().equals(event.getMessageAuthor().getDiscriminatedName())) {
+                                        isPresent = true;
+                                        break;
+                                    }
+                                }
+                                if (!isPresent) {
+                                    selectedEle.voters.add(new Voter(event.getMessageAuthor().getDiscriminatedName()));
+                                    StringBuilder cans = new StringBuilder();
+                                    for (Candidate c : selectedEle.candidates) {
+                                        cans.append(c.getName()).append("\n");
+                                    }
+                                    event.getChannel().sendMessage(new EmbedBuilder()
+                                            .setTitle("Joined Election Successfully")
+                                            .setDescription("You have joined the election: " + selectedEle.getElectionName() + "!\n" +
+                                                    "Cast your votes using the `!setvotes` command.\n" +
+                                                    "Here are the candidates of this election:\n" +
+                                                    cans.toString()));
+                                } else {
+                                    event.getChannel().sendMessage(new EmbedBuilder()
+                                            .setTitle("Duplicate Join")
+                                            .setDescription("You're already in this election (lol)."));
+                                }
                             } else {
                                 event.getChannel().sendMessage(new EmbedBuilder()
                                         .setTitle("Invalid Join")
@@ -311,6 +338,8 @@ public class DiscordBot {
                         getVoteStatus(elections, event, st, embed);
                     } else if (tok.equalsIgnoreCase("!getcandidates")) {
                         getCandidateList(elections, event, st);
+                    } else if (tok.equalsIgnoreCase("!getnumvoters")) {
+                        getNumVoters(elections, event, st, embed);
                     } else if (tok.equalsIgnoreCase("!setvotes")) {
                         if(st.hasMoreTokens()) {
                             tok = st.nextToken();
@@ -374,6 +403,30 @@ public class DiscordBot {
         System.out.println("You can invite the bot by using the following url: " + api.createBotInvite());
     }
 
+    private static void getNumVoters(ArrayList<Election> elections, MessageCreateEvent event, StringTokenizer st, EmbedBuilder embed) {
+        String tok;
+        if(st.hasMoreTokens()) {
+            tok = st.nextToken();
+            Election selectedEle = null;
+            for (Election e : elections) {
+                if(e.getElectionID().equals(tok)) {
+                    selectedEle = e;
+                    break;
+                }
+            }
+            if (selectedEle != null) {
+                event.getChannel().sendMessage(embed.setTitle("Number of Voters")
+                        .setDescription(Integer.toString(selectedEle.voters.size())));
+            } else {
+                event.getChannel().sendMessage(embed.setTitle("Unsuccessful Query")
+                        .setDescription("Election does not exist."));
+            }
+        } else {
+            event.getChannel().sendMessage(embed.setTitle("Unsuccessful Query")
+                    .setDescription("Please enter an election ID."));
+        }
+    }
+
     private static void getVoteStatus(ArrayList<Election> elections, MessageCreateEvent event, StringTokenizer st, EmbedBuilder embed) {
         String tok;
         if (st.hasMoreTokens()) {
@@ -397,6 +450,9 @@ public class DiscordBot {
                 event.getChannel().sendMessage(embed.setTitle("Unsuccessful Search")
                         .setDescription("No such election found :("));
             }
+        } else {
+            event.getChannel().sendMessage(embed.setTitle("Unsuccessful Search")
+                    .setDescription("Please enter an election ID."));
         }
     }
 
