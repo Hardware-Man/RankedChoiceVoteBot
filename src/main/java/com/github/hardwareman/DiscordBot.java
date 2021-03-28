@@ -127,7 +127,7 @@ public class DiscordBot {
                                 //Option to print all output
                                 //Option to show the results of rounds
                                 boolean printing = false;
-                                boolean showRounds = false;
+                                boolean showRounds = true;
                                 if (st.hasMoreTokens()) {
                                     tok = st.nextToken();
                                     showRounds = Boolean.parseBoolean(tok);
@@ -135,7 +135,7 @@ public class DiscordBot {
                                 ArrayList<Candidate> lost = new ArrayList<>();
                                 int d = 0;
                                 while(Candidates.size()>1){
-                                    if(showRounds)   embed.addField("","Round "+d+ ": ");
+                                    if(showRounds) event.getChannel().sendMessage("Round " + d + ": ");
                                     //Calculate:
 
                                     //Initialize all ranks to zero
@@ -187,12 +187,12 @@ public class DiscordBot {
 
                                     //Run the Poll
                                     if(printing)System.out.println("RUNNING POLL!");
-                                    if(showRounds)  embed.addField("","Standings at the start:");
+                                    if(showRounds)  event.getChannel().sendMessage("Standings at the start:");
                                     for(int i = 0; i<Voters.size(); i++){
                                         if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
                                     }
                                     for(int i = 0; i<Candidates.size(); i++){
-                                        if(showRounds)    embed.addField("","Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                        if(showRounds)    event.getChannel().sendMessage("Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
                                     }
                                     //Initialize lowest to Candidates 0
                                     Candidate lowest = Candidates.get(0);
@@ -236,7 +236,7 @@ public class DiscordBot {
                                     }
                                     //No Tie for last, just remove last and add to removed list
                                     if(indicesOfTies.size()==1){
-                                        if(showRounds)    embed.addField("","Removed: "+lowest.getName());
+                                        if(showRounds)    event.getChannel().sendMessage("Removed: "+lowest.getName());
                                         lost.add(lowest);
                                         Candidates.remove(lowest);
                                     }
@@ -262,22 +262,22 @@ public class DiscordBot {
                                         else{
                                             if(printing)  System.out.println("Lowest "+valOfLowest+"< Highest "+valOfHighest);
                                             //For each last place, add to lost and remove from Candidates. Descending order so doesn't affect others.
-                                            if(showRounds)    embed.addField("","Removed: ");
+                                            if(showRounds)    event.getChannel().sendMessage("Removed: ");
                                             for(int n = indicesOfTies.size()-1; n>=0; n--){
                                                 int removal = indicesOfTies.get(n);
-                                                if(showRounds)    embed.addField("",Candidates.get(removal).getName()+" ");
+                                                if(showRounds)    event.getChannel().sendMessage(Candidates.get(removal).getName()+" ");
                                                 lost.add(Candidates.get(removal));
                                                 Candidates.remove(removal);
                                             }
                                         }
                                     }
                                     d++;
-                                    if(showRounds)    embed.addField("","Standings at the end of Round: "+d+" ");
+                                    if(showRounds)    event.getChannel().sendMessage("Standings at the end of Round: "+d+" ");
                                     for(int i = 0; i<Voters.size(); i++){
                                         if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
                                     }
                                     for(int i = 0; i<Candidates.size(); i++){
-                                        if(showRounds)    embed.addField("","Candidate: "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                        if(showRounds)    event.getChannel().sendMessage("Candidate: "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
                                     }
 
                                 }
