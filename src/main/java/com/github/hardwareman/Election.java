@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Election {
     private final String electionName;
     private final String electionID;
-    private long serverID;
     ArrayList<Candidate> candidates = new ArrayList<>();
     ArrayList<Voter> voters = new ArrayList<>();
     public Election(String electionName, String electionID) {
