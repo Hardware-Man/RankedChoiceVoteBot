@@ -87,7 +87,8 @@ public class DiscordBot {
                             } else {
                                 event.getChannel().sendMessage(embed.setTitle("Invalid Start of Vote")
                                         .setDescription("Please state at least one candidate.\n" +
-                                                "Command format: `!startvote [title] [candidate1],[candidate2],...`"));
+                                                "Command format: `!startvote [title] [candidate1],[candidate2],...`")
+                                        .setFooter("DM me with the `!joinvote` command to join this election!"));
                             }
                         } else {
                             event.getChannel().sendMessage(embed.setTitle("Invalid Start of Vote")
