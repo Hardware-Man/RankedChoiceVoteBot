@@ -18,7 +18,6 @@ public class Voter {
         return rankings;
     }
 
-
     public void addChoice(String choice) {
         rankings.add(choice);
     }
