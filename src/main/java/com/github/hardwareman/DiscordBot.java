@@ -1,7 +1,12 @@
 package com.github.hardwareman;
 
+//import java.awt.*;
+import java.util.StringTokenizer;
+//import java.io.*;
+
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 public class DiscordBot {
     public static void main(String[] args) {
@@ -12,8 +17,31 @@ public class DiscordBot {
 
         // Add a listener which answers with "Pong!" if someone writes "!ping"
         api.addMessageCreateListener(event -> {
-            if (event.getMessageContent().equalsIgnoreCase("!ping")) {
-                event.getChannel().sendMessage("Bong!");
+            if (event.isServerMessage()) {
+                StringTokenizer st = new StringTokenizer(event.getMessageContent());
+                if (st.hasMoreTokens() && st.nextToken().equalsIgnoreCase("!startvote")) {
+                    EmbedBuilder embed = new EmbedBuilder();
+                    if (st.hasMoreTokens()) {
+                        embed.setTitle(st.nextToken());
+                        StringBuilder candidates = new StringBuilder();
+                        if(st.hasMoreTokens()) {
+                            candidates.append(st.nextToken("\t\n\r\f,"));
+                            while (st.hasMoreTokens()) {
+                                String tok = st.nextToken("\t\n\r\f,");
+
+                                candidates.append(", ").append(tok);
+                            }
+                            embed.addField("Candidates", candidates.toString());
+                            event.getChannel().sendMessage(embed);
+                        }
+                        else {
+                            event.getChannel().sendMessage("State at least one candidate.");
+                        }
+                    }
+                    else {
+                        event.getChannel().sendMessage("State the election title.");
+                    }
+                }
             }
         });
 
