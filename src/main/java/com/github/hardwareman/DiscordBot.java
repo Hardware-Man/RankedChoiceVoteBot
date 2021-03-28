@@ -102,6 +102,24 @@ public class DiscordBot {
                                     .setDescription(sb.toString()));
                         }
                     }
+                    else if (tok.equals("!endvote")) {
+                        if(st.hasMoreTokens()) {
+                            String eleID = st.nextToken();
+                            int eleIndex = -1;
+                            for(int i = 0; i < elections.size(); i++) {
+                                if (elections.get(i).getElectionID().equals(eleID)) {
+                                    eleIndex = i;
+                                    break;
+                                }
+                            }
+
+                            if(eleIndex != -1) {
+                                Election selectedEle = elections.get(eleIndex);
+                                ArrayList<Candidate> candidates = selectedEle.candidates;
+                                ArrayList<Voter> voters = selectedEle.voters;
+                            }
+                        }
+                    }
                 }
             }
         });

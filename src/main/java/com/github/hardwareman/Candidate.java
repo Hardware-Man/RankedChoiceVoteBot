@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Candidate {
     private final String name;
-    private ArrayList<Integer> rank = new ArrayList<>();
+    private int rank;
 
     public Candidate(String name) {
         this.name = name;
