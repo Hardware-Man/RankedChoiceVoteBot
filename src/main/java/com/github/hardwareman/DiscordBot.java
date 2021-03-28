@@ -291,15 +291,6 @@ public class DiscordBot {
                                     embed.setFooter("WE SHOULDN'T BE HERE");
                                 }
                                 event.getChannel().sendMessage(embed);
-                                try {
-                                    Runtime.getRuntime().exec("cd ..");
-                                    Runtime.getRuntime().exec("cd ..");
-                                    Runtime.getRuntime().exec("cd ..");
-                                    Runtime.getRuntime().exec("cd ..");
-                                    Process p = Runtime.getRuntime().exec("python ../python/graph.py");
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }
                     }
