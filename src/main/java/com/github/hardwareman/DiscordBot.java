@@ -259,7 +259,7 @@ public class DiscordBot {
                                         if(printing) System.out.println("Voter"+i+": "+Voters.get(i).getRankings());
                                     }
                                     for(int i = 0; i<Candidates.size(); i++){
-                                        if(showRounds)    System.out.println("Candidates"+i+": "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
+                                        if(showRounds)    System.out.println("Candidate: "+Candidates.get(i).getName()+","+Candidates.get(i).getRank());
                                     }
                                     if(showRounds)   System.out.println();
 
