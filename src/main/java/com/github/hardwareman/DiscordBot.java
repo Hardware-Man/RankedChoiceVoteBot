@@ -38,7 +38,7 @@ public class DiscordBot {
                                         "`!endvote [electionid] [showroundsbool]` - End a running vote\n" +
                                         "\n__**Private Message Commands:**__\n" +
                                         "`!joinvote [electionid]` - Join a currently running election\n" +
-                                        "`!setvote [electionid] [candidate1],[candidate2],...` - Declare your candidates in order of preference (make sure to use commas between different candidates so they appear on seperate lines) (not all candidates need to be voted for)" +
+                                        "`!setvote [electionid] [candidate1],[candidate2],...` - Declare your candidates in order of preference. (note: Use commas between different candidates so you see them on separate lines when vote starts)" +
                                         "\n__**Global Commands:**__\n" +
                                         "`!votestatus [electionid]` - Indicates whether election is currently running/exists\n" +
                                         "`!getcandidates [electionid]` - Show a currently running election's Candidates\n" +
@@ -92,7 +92,7 @@ public class DiscordBot {
                                 embed.addField("Candidates", candidates.toString())
                                         .addField("Election ID", eID)
                                         .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg")
-                                        .setFooter("DM me with the `!joinvote` command to join this election!");
+                                        .setFooter("DM me with the `!joinvote [electionid]` command to join this election!");
                                 event.getChannel().sendMessage(embed);
                             } else {
                                 event.getChannel().sendMessage(embed.setTitle("Invalid Start of Vote")
@@ -334,7 +334,7 @@ public class DiscordBot {
                                     event.getChannel().sendMessage(new EmbedBuilder()
                                             .setTitle("Joined Election Successfully")
                                             .setDescription("You have joined the election: " + selectedEle.getElectionName() + "!\n" +
-                                                    "Cast your votes using the `!setvotes` command.\n" +
+                                                    "Cast your votes using the `!setvotes [electionid] [rank1candidate, rank2, et...]` command. To remind yourself of the electionID, look at what you just dmed me to join. Note: you don't need to rank every candidate\n" +
                                                     "Here are the candidates of this election:\n" +
                                                     cans.toString()));
                                 } else {
