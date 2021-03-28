@@ -82,13 +82,13 @@ public class DiscordBot {
                                 currElection[0]++;
                                 embed.addField("Candidates", candidates.toString())
                                         .addField("Election ID", eID)
-                                        .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg");
+                                        .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg")
+                                        .setFooter("DM me with the `!joinvote` command to join this election!");
                                 event.getChannel().sendMessage(embed);
                             } else {
                                 event.getChannel().sendMessage(embed.setTitle("Invalid Start of Vote")
                                         .setDescription("Please state at least one candidate.\n" +
-                                                "Command format: `!startvote [title] [candidate1],[candidate2],...`")
-                                        .setFooter("DM me with the `!joinvote` command to join this election!"));
+                                                "Command format: `!startvote [title] [candidate1],[candidate2],...`"));
                             }
                         } else {
                             event.getChannel().sendMessage(embed.setTitle("Invalid Start of Vote")
