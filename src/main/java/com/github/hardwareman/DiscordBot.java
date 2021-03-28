@@ -74,6 +74,7 @@ public class DiscordBot {
                                 embed.addField("Candidates", candidates.toString())
                                         .addField("Election ID",eID)
                                         .setThumbnail("https://i.ytimg.com/vi/P10PFuBFVL8/maxresdefault.jpg");
+                                event.getChannel().sendMessage(embed);
                             } else {
                                 event.getChannel().sendMessage("State at least one candidate.");
                             }
